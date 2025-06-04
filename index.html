@@ -2,197 +2,212 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Game Launcher</title>
-  <style id="main-style">
+  <style>
+    :root {
+      --bg: #111;
+      --text: #fff;
+      --button-bg: #00cc66;
+      --button-hover: #00994d;
+      --input-bg: #222;
+    }
+    body.light {
+      --bg: #f4f4f4;
+      --text: #000;
+      --button-bg: #33aa66;
+      --button-hover: #2b8c55;
+      --input-bg: #ddd;
+    }
     body {
-      background: #111;
+      background: var(--bg);
+      color: var(--text);
       font-family: Arial, sans-serif;
-      color: white;
+      margin: 0;
       padding: 20px;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
-    .tabs {
-      margin-bottom: 15px;
-    }
-
-    .tab {
-      background: #222;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 20px;
-      margin: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .tab.active {
-      background: #00cc66;
-    }
-
-    .toggle-darkmode {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      padding: 8px 15px;
-      background: #333;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    input[type="search"] {
-      padding: 10px 15px;
-      font-size: 18px;
-      width: 300px;
-      border-radius: 8px;
-      border: none;
+    h1 {
+      font-size: 3rem;
       margin-bottom: 20px;
+      user-select: none;
     }
-
-    #buttonsContainer {
+    .controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px;
       justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 900px;
     }
-
-    button.game-btn {
-      background: #00cc66;
+    input[type="search"], select, button.toggle-mode {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background: var(--input-bg);
+      color: var(--text);
+    }
+    #tabs button {
+      background: var(--button-bg);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #tabs button:hover, .game-button:hover {
+      background: var(--button-hover);
+    }
+    .game-button {
+      background: var(--button-bg);
       border: none;
       border-radius: 8px;
       color: white;
       cursor: pointer;
       font-size: 18px;
       min-width: 180px;
-      padding: 10px 20px;
+      padding: 15px 25px;
       transition: background 0.3s;
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
-    button.game-btn:hover {
-      background: #00994d;
+    #buttonsContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      max-width: 900px;
     }
-
-    button.game-btn img {
-      width: 24px;
-      height: 24px;
-      border-radius: 4px;
-    }
-
-    #suggestBox {
+    #suggestForm {
       margin-top: 40px;
-      max-width: 500px;
-      margin-inline: auto;
-    }
-
-    #suggestBox textarea {
+      text-align: center;
+      max-width: 900px;
       width: 100%;
-      height: 80px;
-      border-radius: 10px;
-      border: none;
-      padding: 10px;
-      font-size: 16px;
-      resize: none;
+      user-select: none;
     }
-
-    #suggestBox button {
-      margin-top: 10px;
-      padding: 10px 20px;
+    #suggestForm p {
+      font-size: 1.5rem;
+      margin: 0 0 5px 0;
+    }
+    #suggestForm small {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: var(--text);
+      opacity: 0.7;
+    }
+    #suggestForm input[type="text"] {
+      padding: 10px;
+      width: 60%;
+      max-width: 400px;
       font-size: 16px;
-      background-color: #00cc66;
-      color: white;
+      border-radius: 5px;
       border: none;
-      border-radius: 8px;
+      background: var(--input-bg);
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    #suggestForm button[type="submit"] {
+      background: var(--button-bg);
+      color: white;
+      font-size: 16px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
+      transition: background 0.3s;
+    }
+    #suggestForm button[type="submit"]:hover {
+      background: var(--button-hover);
     }
   </style>
 </head>
 <body>
-  <button class="toggle-darkmode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  <h1>Game Launcher</h1>
 
-  <div class="tabs">
-    <button class="tab active" onclick="setCategory('All')">All</button>
-    <button class="tab" onclick="setCategory('Arcade')">Arcade</button>
-    <button class="tab" onclick="setCategory('Sports')">Sports</button>
-    <button class="tab" onclick="setCategory('Puzzle')">Puzzle</button>
+  <div class="controls">
+    <input id="searchInput" type="search" placeholder="Search games..." />
+    <button class="toggle-mode" onclick="toggleDarkMode()">Toggle Light/Dark</button>
   </div>
 
-  <input id="searchInput" type="search" placeholder="Search games..." />
+  <div id="tabs" class="controls">
+    <button onclick="filterCategory('all')">All</button>
+    <button onclick="filterCategory('arcade')">Arcade</button>
+    <button onclick="filterCategory('sports')">Sports</button>
+    <button onclick="filterCategory('puzzle')">Puzzle</button>
+  </div>
+
   <div id="buttonsContainer"></div>
 
-  <div id="suggestBox">
-    <h3>Suggest a Game</h3>
-    <textarea id="suggestion" placeholder="Got a cool game in mind? Let us know!"></textarea>
-    <button onclick="submitSuggestion()">Submit Suggestion</button>
-  </div>
+  <form id="suggestForm">
+    <p>Suggest a Game</p>
+    <small>Got a cool game in mind? Let us know!</small>
+    <input type="text" id="suggestInput" placeholder="Game name or link" required />
+    <br />
+    <button type="submit">Submit Suggestion</button>
+  </form>
 
   <script>
     const games = [
-      { name: "2048", url: "2048.html", icon: "icons/2048.png", category: "Puzzle" },
-      { name: "Drive Mad", url: "drivemad.html", icon: "icons/drive.png", category: "Sports" },
-      { name: "Gunspin", url: "gunspin.html", icon: "icons/gunspin.png", category: "Arcade" },
-      { name: "Snow Rider", url: "snowrider.html", icon: "icons/snowrider.png", category: "Sports" }
-      // Add more games as needed
+      { name: "2048", url: "2048.html", category: "puzzle" },
+      { name: "Cookie Clicker", url: "cookieclicker.html", category: "arcade" },
+      { name: "Drive Mad", url: "drivemad.html", category: "sports" },
+      { name: "Gunspin", url: "gunspin.html", category: "arcade" },
+      { name: "Monkey Mart", url: "monkeymart.html", category: "arcade" },
+      { name: "Moto X3M", url: "motox3m.html", category: "sports" },
+      { name: "Poly Track", url: "polytrack.html", category: "sports" },
+      { name: "Retro Bowl", url: "retrobowl.html", category: "sports" },
+      { name: "Rocket League", url: "rocketleague.html", category: "sports" },
+      { name: "Snow Rider", url: "snowrider.html", category: "sports" }
     ];
 
-    let selectedCategory = "All";
+    let currentCategory = "all";
+
     const buttonsContainer = document.getElementById("buttonsContainer");
     const searchInput = document.getElementById("searchInput");
 
-    function setCategory(category) {
-      selectedCategory = category;
-      document.querySelectorAll(".tab").forEach(tab => {
-        tab.classList.remove("active");
-        if (tab.textContent === category) tab.classList.add("active");
-      });
-      renderButtons(searchInput.value);
-    }
-
-    function renderButtons(filter = "") {
+    function renderButtons() {
+      const filter = searchInput.value.toLowerCase();
       buttonsContainer.innerHTML = "";
-      const filteredGames = games.filter(game =>
-        (selectedCategory === "All" || game.category === selectedCategory) &&
-        game.name.toLowerCase().includes(filter.toLowerCase())
-      );
-
+      const filteredGames = games.filter(game => {
+        return (currentCategory === "all" || game.category === currentCategory) &&
+               game.name.toLowerCase().includes(filter);
+      });
       filteredGames.forEach(game => {
         const btn = document.createElement("button");
-        btn.className = "game-btn";
-        if (game.icon) {
-          const img = document.createElement("img");
-          img.src = game.icon;
-          img.alt = `${game.name} icon`;
-          btn.appendChild(img);
-        }
-        const text = document.createTextNode(game.name);
-        btn.appendChild(text);
+        btn.className = "game-button";
+        btn.textContent = game.name;
         btn.onclick = () => launchGame(game.url);
         buttonsContainer.appendChild(btn);
       });
-
       if (filteredGames.length === 0) {
         buttonsContainer.textContent = "No games found.";
       }
     }
 
-    function launchGame(gameUrl) {
+    function filterCategory(cat) {
+      currentCategory = cat;
+      renderButtons();
+    }
+
+    function launchGame(url) {
       const gameWindow = window.open("about:blank", "_blank");
       const html = `
         <html>
           <head>
-            <title>Playing ${gameUrl}</title>
+            <title>Game</title>
             <style>
-              body { margin: 0; overflow: hidden; background: black; }
-              iframe { border: none; width: 100vw; height: 100vh; }
+              body { margin: 0; background: black; }
+              iframe { width: 100vw; height: 100vh; border: none; }
             </style>
           </head>
           <body>
-            <iframe src="${gameUrl}" allowfullscreen></iframe>
+            <iframe src="${url}" allowfullscreen></iframe>
           </body>
         </html>`;
       gameWindow.document.open();
@@ -201,28 +216,19 @@
     }
 
     function toggleDarkMode() {
-      const style = document.getElementById("main-style");
-      if (style.innerHTML.includes("background: #111")) {
-        style.innerHTML = style.innerHTML.replace(/background: #111/g, "background: #eee")
-                                        .replace(/color: white/g, "color: black")
-                                        .replace(/background: #222/g, "background: #ccc")
-                                        .replace(/#00cc66/g, "#339966")
-                                        .replace(/#00994d/g, "#2a7a58");
-      } else {
-        location.reload(); // resets to default dark mode style
-      }
+      document.body.classList.toggle("light");
     }
 
-    function submitSuggestion() {
-      const suggestion = document.getElementById("suggestion").value;
-      if (suggestion.trim() !== "") {
-        alert("Thanks for your suggestion! (This doesn't save anywhere yet.)");
-        document.getElementById("suggestion").value = "";
-        // To store suggestions, use Firebase or a Google Form webhook.
-      }
-    }
+    searchInput.addEventListener("input", renderButtons);
 
-    searchInput.addEventListener("input", () => renderButtons(searchInput.value));
+    document.getElementById("suggestForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const value = document.getElementById("suggestInput").value.trim();
+      if (value) {
+        window.open(`mailto:youremail@example.com?subject=Game Suggestion&body=${encodeURIComponent(value)}`);
+      }
+    });
+
     renderButtons();
   </script>
 </body>
