@@ -28,12 +28,20 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      overflow-x: hidden;
     }
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
+
+    /* Title */
+    header {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 25px;
       user-select: none;
     }
+
+    /* Controls container */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -42,8 +50,12 @@
       margin-bottom: 20px;
       width: 100%;
       max-width: 900px;
+      box-sizing: border-box;
     }
-    input[type="search"], select, button.toggle-mode {
+
+    input[type="search"],
+    select,
+    button.toggle-mode {
       padding: 10px;
       font-size: 16px;
       border: none;
@@ -51,6 +63,7 @@
       background: var(--input-bg);
       color: var(--text);
     }
+
     #tabs button {
       background: var(--button-bg);
       color: white;
@@ -59,9 +72,11 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    #tabs button:hover, .game-button:hover {
+    #tabs button:hover,
+    .game-button:hover {
       background: var(--button-hover);
     }
+
     .game-button {
       background: var(--button-bg);
       border: none;
@@ -75,118 +90,151 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      user-select: none;
     }
+
     #buttonsContainer {
       display: flex;
       flex-wrap: wrap;
       gap: 15px;
       justify-content: center;
       max-width: 900px;
-    }
-    #recentlyAdded, #recentlyPlayed {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding: 10px 0;
-      max-width: 900px;
       width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 60px; /* for some breathing space */
+    }
+
+    /* Sidebar fixed top right */
+    #sidebar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 260px;
+      background: var(--bg);
+      border: 2px solid var(--button-bg);
+      border-radius: 10px;
+      padding: 15px;
+      z-index: 1000;
       user-select: none;
+      box-shadow: 0 0 15px rgba(0, 204, 102, 0.6);
+      font-size: 14px;
     }
-    #recentlyAdded button, #recentlyPlayed button {
-      flex-shrink: 0;
-      background: var(--button-bg);
-      border: none;
-      border-radius: 6px;
-      color: white;
-      cursor: pointer;
-      font-size: 16px;
-      padding: 10px 15px;
-      transition: background 0.3s;
+
+    #sidebar h2 {
+      margin: 0 0 10px 0;
+      font-size: 1.5rem;
+      user-select: none;
+      color: var(--button-bg);
+    }
+
+    #recentlyPlayed {
+      max-height: 140px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    #recentlyPlayed button {
+      width: 100%;
+      text-align: left;
+      padding: 8px;
+      font-size: 14px;
       white-space: nowrap;
+      background: var(--button-bg);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s;
     }
-    #recentlyAdded button:hover, #recentlyPlayed button:hover {
+    #recentlyPlayed button:hover {
       background: var(--button-hover);
     }
+
     #suggestForm {
-      margin-top: 40px;
       text-align: center;
-      max-width: 900px;
-      width: 100%;
-      user-select: none;
     }
-    #suggestForm p {
-      font-size: 1.5rem;
-      margin: 0 0 5px 0;
-    }
-    #suggestForm small {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 1rem;
-      color: var(--text);
-      opacity: 0.7;
-    }
+
     #suggestForm input[type="text"] {
-      padding: 10px;
-      width: 60%;
-      max-width: 400px;
-      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 14px;
+      padding: 8px;
       border-radius: 5px;
       border: none;
       background: var(--input-bg);
       color: var(--text);
-      margin-bottom: 10px;
+      user-select: text;
     }
+
     #suggestForm button[type="submit"] {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
       background: var(--button-bg);
       color: white;
-      font-size: 16px;
-      padding: 10px 20px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      user-select: none;
       transition: background 0.3s;
     }
+
     #suggestForm button[type="submit"]:hover {
       background: var(--button-hover);
+    }
+
+    #suggestInstructions {
+      font-size: 12px;
+      margin-top: 6px;
+      opacity: 0.7;
+      user-select: none;
     }
   </style>
 </head>
 <body>
-  <h1>Game Launcher</h1>
+  <header>Game Launcher</header>
 
   <div class="controls">
-    <input id="searchInput" type="search" placeholder="Search games..." />
-    <button class="toggle-mode" onclick="toggleDarkMode()">Toggle Light/Dark</button>
+    <input id="searchInput" type="search" placeholder="Search games..." aria-label="Search games" />
+    <button class="toggle-mode" onclick="toggleDarkMode()" aria-label="Toggle light or dark mode">Toggle Light/Dark</button>
   </div>
 
-  <div id="tabs" class="controls">
-    <button onclick="filterCategory('all')">All</button>
-    <button onclick="filterCategory('arcade')">Arcade</button>
-    <button onclick="filterCategory('sports')">Sports</button>
-    <button onclick="filterCategory('puzzle')">Puzzle</button>
+  <div id="tabs" class="controls" role="tablist" aria-label="Game categories">
+    <button role="tab" onclick="filterCategory('all')">All</button>
+    <button role="tab" onclick="filterCategory('arcade')">Arcade</button>
+    <button role="tab" onclick="filterCategory('sports')">Sports</button>
+    <button role="tab" onclick="filterCategory('puzzle')">Puzzle</button>
   </div>
 
-  <!-- Recently Added Games Bar -->
-  <section>
-    <h2 style="max-width:900px; width:100%; margin: 20px 0 10px 0; user-select:none;">Recently Added</h2>
-    <div id="recentlyAdded"></div>
-  </section>
+  <div id="buttonsContainer" aria-live="polite" aria-label="Available games"></div>
 
-  <!-- Recently Played Games Bar -->
-  <section>
-    <h2 style="max-width:900px; width:100%; margin: 20px 0 10px 0; user-select:none;">Recently Played</h2>
-    <div id="recentlyPlayed"></div>
-  </section>
+  <!-- Sidebar with Recently Played and Suggest a Game -->
+  <div id="sidebar" aria-label="Sidebar with recently played games and game suggestion form">
+    <h2>Recently Played</h2>
+    <div id="recentlyPlayed" aria-live="polite">No recently played games.</div>
 
-  <div id="buttonsContainer"></div>
-
-  <form id="suggestForm">
-    <p>Suggest a Game</p>
-    <small>Got a cool game in mind? Let us know!</small>
-    <input type="text" id="suggestInput" placeholder="Game name or link" required />
-    <br />
-    <button type="submit">Submit Suggestion</button>
-  </form>
+    <form id="suggestForm" aria-label="Suggest a Game Form">
+      <h2>Suggest a Game</h2>
+      <input
+        type="text"
+        id="suggestInput"
+        placeholder="Game name or link"
+        required
+        aria-required="true"
+        aria-describedby="suggestInstructions"
+        autocomplete="off"
+      />
+      <button type="submit">Submit Suggestion</button>
+      <p id="suggestInstructions">
+        Got a cool game in mind? Let us know! We'll open your email client with your suggestion ready.
+      </p>
+    </form>
+  </div>
 
   <script>
     const games = [
@@ -199,72 +247,18 @@
       { name: "Poly Track", url: "polytrack.html", category: "sports" },
       { name: "Retro Bowl", url: "retrobowl.html", category: "sports" },
       { name: "Rocket League", url: "rocketleague.html", category: "sports" },
-      { name: "Snow Rider", url: "snowrider.html", category: "sports" }
+      { name: "Snow Rider", url: "snowrider.html", category: "sports" },
     ];
 
     let currentCategory = "all";
-
     const buttonsContainer = document.getElementById("buttonsContainer");
     const searchInput = document.getElementById("searchInput");
-    const recentlyAddedContainer = document.getElementById("recentlyAdded");
     const recentlyPlayedContainer = document.getElementById("recentlyPlayed");
 
-    // Show last 5 games added as "Recently Added"
-    function renderRecentlyAdded() {
-      recentlyAddedContainer.innerHTML = "";
-      const lastFive = games.slice(-5);
-      lastFive.forEach(game => {
-        const btn = document.createElement("button");
-        btn.textContent = game.name;
-        btn.onclick = () => launchGame(game.url, true);
-        recentlyAddedContainer.appendChild(btn);
-      });
-    }
+    // Store recently played games (max 5)
+    let recentlyPlayed = [];
 
-    // Get recent played from localStorage or empty array
-    function getRecentlyPlayed() {
-      const stored = localStorage.getItem("recentlyPlayedGames");
-      if (!stored) return [];
-      try {
-        return JSON.parse(stored);
-      } catch {
-        return [];
-      }
-    }
-
-    // Save recent played to localStorage
-    function saveRecentlyPlayed(list) {
-      localStorage.setItem("recentlyPlayedGames", JSON.stringify(list));
-    }
-
-    // Add to recently played, max 5 unique entries, most recent first
-    function addRecentlyPlayed(game) {
-      let recent = getRecentlyPlayed();
-      // Remove if already present
-      recent = recent.filter(g => g.url !== game.url);
-      recent.unshift(game);
-      if (recent.length > 5) recent.pop();
-      saveRecentlyPlayed(recent);
-      renderRecentlyPlayed();
-    }
-
-    // Render recently played bar
-    function renderRecentlyPlayed() {
-      recentlyPlayedContainer.innerHTML = "";
-      const recent = getRecentlyPlayed();
-      if (recent.length === 0) {
-        recentlyPlayedContainer.textContent = "No recently played games.";
-        return;
-      }
-      recent.forEach(game => {
-        const btn = document.createElement("button");
-        btn.textContent = game.name;
-        btn.onclick = () => launchGame(game.url, true);
-        recentlyPlayedContainer.appendChild(btn);
-      });
-    }
-
-    // Render main game buttons with filter and search
+    // Render main game buttons filtered by category and search
     function renderButtons() {
       const filter = searchInput.value.toLowerCase();
       buttonsContainer.innerHTML = "";
@@ -272,29 +266,36 @@
         return (currentCategory === "all" || game.category === currentCategory) &&
                game.name.toLowerCase().includes(filter);
       });
+
       filteredGames.forEach(game => {
         const btn = document.createElement("button");
         btn.className = "game-button";
         btn.textContent = game.name;
-        btn.onclick = () => launchGame(game.url, true);
+        btn.onclick = () => launchGame(game.url, game.name);
+        btn.setAttribute("aria-label", `Launch ${game.name} game`);
         buttonsContainer.appendChild(btn);
       });
+
       if (filteredGames.length === 0) {
         buttonsContainer.textContent = "No games found.";
       }
     }
 
-    // Launch game and record play for recently played
-    function launchGame(url, track = false) {
-      const game = games.find(g => g.url === url);
-      if (track && game) {
-        addRecentlyPlayed(game);
-      }
+    // Filter category
+    function filterCategory(cat) {
+      currentCategory = cat;
+      renderButtons();
+    }
+
+    // Launch game in new window with iframe
+    function launchGame(url, name) {
+      addRecentlyPlayed(name, url);
+
       const gameWindow = window.open("about:blank", "_blank");
       const html = `
         <html>
           <head>
-            <title>Game</title>
+            <title>${name}</title>
             <style>
               body { margin: 0; background: black; }
               iframe { width: 100vw; height: 100vh; border: none; }
@@ -309,29 +310,58 @@
       gameWindow.document.close();
     }
 
-    function filterCategory(cat) {
-      currentCategory = cat;
-      renderButtons();
-    }
-
+    // Toggle light/dark mode
     function toggleDarkMode() {
       document.body.classList.toggle("light");
     }
 
-    searchInput.addEventListener("input", renderButtons);
+    // Add game to recently played list and update sidebar
+    function addRecentlyPlayed(name, url) {
+      // Remove if already in list
+      recentlyPlayed = recentlyPlayed.filter(g => g.name !== name);
 
+      // Add to front
+      recentlyPlayed.unshift({ name, url });
+
+      // Keep max 5
+      if (recentlyPlayed.length > 5) {
+        recentlyPlayed.pop();
+      }
+
+      renderRecentlyPlayed();
+    }
+
+    // Render recently played buttons
+    function renderRecentlyPlayed() {
+      if (recentlyPlayed.length === 0) {
+        recentlyPlayedContainer.textContent = "No recently played games.";
+        return;
+      }
+      recentlyPlayedContainer.innerHTML = "";
+      recentlyPlayed.forEach(game => {
+        const btn = document.createElement("button");
+        btn.textContent = game.name;
+        btn.title = `Launch ${game.name} again`;
+        btn.onclick = () => launchGame(game.url, game.name);
+        recentlyPlayedContainer.appendChild(btn);
+      });
+    }
+
+    // Suggest form submission opens mailto in same tab
     document.getElementById("suggestForm").addEventListener("submit", function (e) {
       e.preventDefault();
       const value = document.getElementById("suggestInput").value.trim();
       if (value) {
-        window.open(`mailto:youremail@example.com?subject=Game Suggestion&body=${encodeURIComponent(value)}`);
+        window.location.href = `mailto:Lamcclements10@gmail.com?subject=Game Suggestion&body=${encodeURIComponent(value)}`;
       }
     });
 
-    // Initial renders
-    renderRecentlyAdded();
-    renderRecentlyPlayed();
+    // Event listener for search input
+    searchInput.addEventListener("input", renderButtons);
+
+    // Initial render
     renderButtons();
+    renderRecentlyPlayed();
   </script>
 </body>
 </html>
