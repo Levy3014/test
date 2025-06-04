@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Game Launcher with Search</title>
+  <style>
+    body {
+      background: #111;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    input[type="search"] {
+      padding: 10px 15px;
+      font-size: 18px;
+      width: 300px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 20px;
+    }
+    #buttonsContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      width: 100%;
+      max-width: 900px;
+    }
+    button {
+      background: #00cc66;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
+      min-width: 180px;
+      padding: 15px 25px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #00994d;
+    }
+  </style>
+</head>
+<body>
+
+  <input id="searchInput" type="search" placeholder="Search games..." aria-label="Search games" />
+
+  <div id="buttonsContainer"></div>
+
+  <script>
+    const games = [
+  { name: "2048", url: "2048.html" },
+  { name: "Drive Mad", url: "drivemad.html" },
+  { name: "Gunspin", url: "gunspin.html" },
+  { name: "Snow Rider", url: "snowrider.html" },
+  { name: "Rocket League", url: "rocketleague.html" },
+  { name: "Moto X3M", url: "motox3m.html" },
+  { name: "Retro Bowl", url: "retrobowl.html" },
+  { name: "Poly Track", url: "polytrack.html" },
+  { name: "Monkey Mart", url: "monkeymart.html" },
+  { name: "Cookie Clicker", url: "cookieclicker.html" }
+];
+
+    const buttonsContainer = document.getElementById("buttonsContainer");
+    const searchInput = document.getElementById("searchInput");
+
+    function renderButtons(filter = "") {
+      buttonsContainer.innerHTML = "";
+      const filteredGames = games.filter(game =>
+        game.name.toLowerCase().includes(filter.toLowerCase())
+      );
+      filteredGames.forEach(game => {
+        const btn = document.createElement("button");
+        btn.textContent = game.name;  // Removed "Play" prefix
+        btn.onclick = () => launchGame(game.url);
+        buttonsContainer.appendChild(btn);
+      });
+      if (filteredGames.length === 0) {
+        buttonsContainer.textContent = "No games found.";
+      }
+    }
+
+    function launchGame(gameUrl) {
+      const gameWindow = window.open("about:blank", "_blank");
+      const html = `
+        <html>
+          <head>
+            <title>Playing ${gameUrl}</title>
+            <style>
+              body { margin: 0; overflow: hidden; background: black; }
+              iframe { border: none; width: 100vw; height: 100vh; }
+            </style>
+          </head>
+          <body>
+            <iframe src="${gameUrl}" allowfullscreen></iframe>
+          </body>
+        </html>`;
+      gameWindow.document.open();
+      gameWindow.document.write(html);
+      gameWindow.document.close();
+    }
+
+    searchInput.addEventListener("input", () => {
+      renderButtons(searchInput.value);
+    });
+
+    renderButtons();
+  </script>
+</body>
+</html>
