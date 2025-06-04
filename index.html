@@ -3,16 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <title>Game Launcher</title>
-  <style>
+  <style id="main-style">
     body {
       background: #111;
       font-family: Arial, sans-serif;
-      padding: 20px;
       color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .tabs {
+      margin-bottom: 15px;
+    }
+
+    .tab {
+      background: #222;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .tab.active {
+      background: #00cc66;
+    }
+
+    .toggle-darkmode {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      padding: 8px 15px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
     input[type="search"] {
@@ -29,11 +57,9 @@
       flex-wrap: wrap;
       gap: 15px;
       justify-content: center;
-      width: 100%;
-      max-width: 900px;
     }
 
-    button {
+    button.game-btn {
       background: #00cc66;
       border: none;
       border-radius: 8px;
@@ -48,47 +74,95 @@
       gap: 10px;
     }
 
-    button:hover {
+    button.game-btn:hover {
       background: #00994d;
     }
 
-    button img {
+    button.game-btn img {
       width: 24px;
       height: 24px;
       border-radius: 4px;
     }
+
+    #suggestBox {
+      margin-top: 40px;
+      max-width: 500px;
+      margin-inline: auto;
+    }
+
+    #suggestBox textarea {
+      width: 100%;
+      height: 80px;
+      border-radius: 10px;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      resize: none;
+    }
+
+    #suggestBox button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #00cc66;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+  <button class="toggle-darkmode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
-  <input id="searchInput" type="search" placeholder="Search games..." aria-label="Search games" />
+  <div class="tabs">
+    <button class="tab active" onclick="setCategory('All')">All</button>
+    <button class="tab" onclick="setCategory('Arcade')">Arcade</button>
+    <button class="tab" onclick="setCategory('Sports')">Sports</button>
+    <button class="tab" onclick="setCategory('Puzzle')">Puzzle</button>
+  </div>
+
+  <input id="searchInput" type="search" placeholder="Search games..." />
   <div id="buttonsContainer"></div>
+
+  <div id="suggestBox">
+    <h3>Suggest a Game</h3>
+    <textarea id="suggestion" placeholder="Got a cool game in mind? Let us know!"></textarea>
+    <button onclick="submitSuggestion()">Submit Suggestion</button>
+  </div>
 
   <script>
     const games = [
-      { name: "2048", url: "2048.html", icon: "icons/2048.png" },
-      { name: "Drive Mad", url: "drivemad.html", icon: "icons/drive.png" },
-      { name: "Gunspin", url: "gunspin.html", icon: "icons/gunspin.png" },
-      { name: "Snow Rider", url: "snowrider.html", icon: "icons/snowrider.png" },
-      { name: "Cookie Clicker", url: "cookieclicker.html", icon: "icons/cookie.png" },
-      { name: "Monkey Mart", url: "monkeymart.html", icon: "icons/monkey.png" },
-      { name: "Moto X3M", url: "motox3m.html", icon: "icons/moto.png" },
-      { name: "Poly Track", url: "polytrack.html", icon: "icons/poly.png" },
-      { name: "Retro Bowl", url: "retrobowl.html", icon: "icons/retro.png" },
-      { name: "Rocket League", url: "rocketleague.html", icon: "icons/rocket.png" }
+      { name: "2048", url: "2048.html", icon: "icons/2048.png", category: "Puzzle" },
+      { name: "Drive Mad", url: "drivemad.html", icon: "icons/drive.png", category: "Sports" },
+      { name: "Gunspin", url: "gunspin.html", icon: "icons/gunspin.png", category: "Arcade" },
+      { name: "Snow Rider", url: "snowrider.html", icon: "icons/snowrider.png", category: "Sports" }
+      // Add more games as needed
     ];
 
+    let selectedCategory = "All";
     const buttonsContainer = document.getElementById("buttonsContainer");
     const searchInput = document.getElementById("searchInput");
+
+    function setCategory(category) {
+      selectedCategory = category;
+      document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.remove("active");
+        if (tab.textContent === category) tab.classList.add("active");
+      });
+      renderButtons(searchInput.value);
+    }
 
     function renderButtons(filter = "") {
       buttonsContainer.innerHTML = "";
       const filteredGames = games.filter(game =>
+        (selectedCategory === "All" || game.category === selectedCategory) &&
         game.name.toLowerCase().includes(filter.toLowerCase())
       );
 
       filteredGames.forEach(game => {
         const btn = document.createElement("button");
+        btn.className = "game-btn";
         if (game.icon) {
           const img = document.createElement("img");
           img.src = game.icon;
@@ -126,10 +200,29 @@
       gameWindow.document.close();
     }
 
-    searchInput.addEventListener("input", () => {
-      renderButtons(searchInput.value);
-    });
+    function toggleDarkMode() {
+      const style = document.getElementById("main-style");
+      if (style.innerHTML.includes("background: #111")) {
+        style.innerHTML = style.innerHTML.replace(/background: #111/g, "background: #eee")
+                                        .replace(/color: white/g, "color: black")
+                                        .replace(/background: #222/g, "background: #ccc")
+                                        .replace(/#00cc66/g, "#339966")
+                                        .replace(/#00994d/g, "#2a7a58");
+      } else {
+        location.reload(); // resets to default dark mode style
+      }
+    }
 
+    function submitSuggestion() {
+      const suggestion = document.getElementById("suggestion").value;
+      if (suggestion.trim() !== "") {
+        alert("Thanks for your suggestion! (This doesn't save anywhere yet.)");
+        document.getElementById("suggestion").value = "";
+        // To store suggestions, use Firebase or a Google Form webhook.
+      }
+    }
+
+    searchInput.addEventListener("input", () => renderButtons(searchInput.value));
     renderButtons();
   </script>
 </body>
