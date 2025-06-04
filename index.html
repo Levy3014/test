@@ -83,6 +83,30 @@
       justify-content: center;
       max-width: 900px;
     }
+    #recentlyAdded, #recentlyPlayed {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 10px 0;
+      max-width: 900px;
+      width: 100%;
+      user-select: none;
+    }
+    #recentlyAdded button, #recentlyPlayed button {
+      flex-shrink: 0;
+      background: var(--button-bg);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 10px 15px;
+      transition: background 0.3s;
+      white-space: nowrap;
+    }
+    #recentlyAdded button:hover, #recentlyPlayed button:hover {
+      background: var(--button-hover);
+    }
     #suggestForm {
       margin-top: 40px;
       text-align: center;
@@ -142,6 +166,18 @@
     <button onclick="filterCategory('puzzle')">Puzzle</button>
   </div>
 
+  <!-- Recently Added Games Bar -->
+  <section>
+    <h2 style="max-width:900px; width:100%; margin: 20px 0 10px 0; user-select:none;">Recently Added</h2>
+    <div id="recentlyAdded"></div>
+  </section>
+
+  <!-- Recently Played Games Bar -->
+  <section>
+    <h2 style="max-width:900px; width:100%; margin: 20px 0 10px 0; user-select:none;">Recently Played</h2>
+    <div id="recentlyPlayed"></div>
+  </section>
+
   <div id="buttonsContainer"></div>
 
   <form id="suggestForm">
@@ -170,7 +206,65 @@
 
     const buttonsContainer = document.getElementById("buttonsContainer");
     const searchInput = document.getElementById("searchInput");
+    const recentlyAddedContainer = document.getElementById("recentlyAdded");
+    const recentlyPlayedContainer = document.getElementById("recentlyPlayed");
 
+    // Show last 5 games added as "Recently Added"
+    function renderRecentlyAdded() {
+      recentlyAddedContainer.innerHTML = "";
+      const lastFive = games.slice(-5);
+      lastFive.forEach(game => {
+        const btn = document.createElement("button");
+        btn.textContent = game.name;
+        btn.onclick = () => launchGame(game.url, true);
+        recentlyAddedContainer.appendChild(btn);
+      });
+    }
+
+    // Get recent played from localStorage or empty array
+    function getRecentlyPlayed() {
+      const stored = localStorage.getItem("recentlyPlayedGames");
+      if (!stored) return [];
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+
+    // Save recent played to localStorage
+    function saveRecentlyPlayed(list) {
+      localStorage.setItem("recentlyPlayedGames", JSON.stringify(list));
+    }
+
+    // Add to recently played, max 5 unique entries, most recent first
+    function addRecentlyPlayed(game) {
+      let recent = getRecentlyPlayed();
+      // Remove if already present
+      recent = recent.filter(g => g.url !== game.url);
+      recent.unshift(game);
+      if (recent.length > 5) recent.pop();
+      saveRecentlyPlayed(recent);
+      renderRecentlyPlayed();
+    }
+
+    // Render recently played bar
+    function renderRecentlyPlayed() {
+      recentlyPlayedContainer.innerHTML = "";
+      const recent = getRecentlyPlayed();
+      if (recent.length === 0) {
+        recentlyPlayedContainer.textContent = "No recently played games.";
+        return;
+      }
+      recent.forEach(game => {
+        const btn = document.createElement("button");
+        btn.textContent = game.name;
+        btn.onclick = () => launchGame(game.url, true);
+        recentlyPlayedContainer.appendChild(btn);
+      });
+    }
+
+    // Render main game buttons with filter and search
     function renderButtons() {
       const filter = searchInput.value.toLowerCase();
       buttonsContainer.innerHTML = "";
@@ -182,7 +276,7 @@
         const btn = document.createElement("button");
         btn.className = "game-button";
         btn.textContent = game.name;
-        btn.onclick = () => launchGame(game.url);
+        btn.onclick = () => launchGame(game.url, true);
         buttonsContainer.appendChild(btn);
       });
       if (filteredGames.length === 0) {
@@ -190,12 +284,12 @@
       }
     }
 
-    function filterCategory(cat) {
-      currentCategory = cat;
-      renderButtons();
-    }
-
-    function launchGame(url) {
+    // Launch game and record play for recently played
+    function launchGame(url, track = false) {
+      const game = games.find(g => g.url === url);
+      if (track && game) {
+        addRecentlyPlayed(game);
+      }
       const gameWindow = window.open("about:blank", "_blank");
       const html = `
         <html>
@@ -215,6 +309,11 @@
       gameWindow.document.close();
     }
 
+    function filterCategory(cat) {
+      currentCategory = cat;
+      renderButtons();
+    }
+
     function toggleDarkMode() {
       document.body.classList.toggle("light");
     }
@@ -229,6 +328,9 @@
       }
     });
 
+    // Initial renders
+    renderRecentlyAdded();
+    renderRecentlyPlayed();
     renderButtons();
   </script>
 </body>
