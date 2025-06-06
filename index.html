@@ -11,6 +11,7 @@
       --button-bg: #00cc66;
       --button-hover: #00994d;
       --input-bg: #222;
+      --highlight: #33ff88;
     }
     body.light {
       --bg: #f4f4f4;
@@ -18,6 +19,7 @@
       --button-bg: #33aa66;
       --button-hover: #2b8c55;
       --input-bg: #ddd;
+      --highlight: #1b7f43;
     }
     body {
       background: var(--bg);
@@ -26,22 +28,81 @@
       margin: 0;
       padding: 20px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      flex-direction: row;
       min-height: 100vh;
       box-sizing: border-box;
       overflow-x: hidden;
     }
-
-    /* Title */
+    #leftSidebar {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      user-select: none;
+      z-index: 10000;
+    }
+    #randomGameBtn {
+      width: 100%;
+      background: var(--button-bg);
+      border: none;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(0, 204, 102, 0.8);
+      transition: background 0.3s, box-shadow 0.3s;
+      user-select: none;
+    }
+    #randomGameBtn:hover {
+      background: var(--button-hover);
+      box-shadow: 0 0 20px rgba(0, 204, 102, 1);
+    }
+    .poll-container {
+      width: 100%;
+      height: 420px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0, 255, 128, 0.2);
+    }
+    .poll-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    #hoverInfoContainer {
+      background: var(--bg);
+      border: 2px solid var(--button-bg);
+      border-radius: 10px;
+      padding: 15px;
+      color: var(--text);
+      font-size: 14px;
+      max-height: 250px;
+      overflow-y: auto;
+      user-select: none;
+      box-shadow: 0 0 15px rgba(0, 204, 102, 0.6);
+      flex-shrink: 0;
+    }
+    #mainContent {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 40px;
+      box-sizing: border-box;
+      margin-left: 360px;
+    }
     header {
       font-size: 2rem;
       font-weight: bold;
       margin-bottom: 25px;
       user-select: none;
     }
-
-    /* Controls container */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -52,7 +113,6 @@
       max-width: 900px;
       box-sizing: border-box;
     }
-
     input[type="search"],
     select,
     button.toggle-mode {
@@ -63,7 +123,6 @@
       background: var(--input-bg);
       color: var(--text);
     }
-
     #tabs button {
       background: var(--button-bg);
       color: white;
@@ -71,12 +130,17 @@
       padding: 10px 15px;
       border-radius: 6px;
       cursor: pointer;
+      user-select: none;
+      transition: background 0.3s, box-shadow 0.3s;
     }
-    #tabs button:hover,
-    .game-button:hover {
+    #tabs button:hover {
       background: var(--button-hover);
     }
-
+    #tabs button.selected {
+      background: var(--highlight);
+      box-shadow: 0 0 10px var(--highlight);
+      font-weight: bold;
+    }
     .game-button {
       background: var(--button-bg);
       border: none;
@@ -86,13 +150,12 @@
       font-size: 18px;
       min-width: 180px;
       padding: 15px 25px;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.2s, outline 0.2s;
       display: flex;
       align-items: center;
       gap: 10px;
       user-select: none;
     }
-
     #buttonsContainer {
       display: flex;
       flex-wrap: wrap;
@@ -101,10 +164,8 @@
       max-width: 900px;
       width: 100%;
       box-sizing: border-box;
-      margin-bottom: 60px; /* for some breathing space */
+      margin-bottom: 60px;
     }
-
-    /* Sidebar fixed top right */
     #sidebar {
       position: fixed;
       top: 20px;
@@ -119,14 +180,12 @@
       box-shadow: 0 0 15px rgba(0, 204, 102, 0.6);
       font-size: 14px;
     }
-
     #sidebar h2 {
       margin: 0 0 10px 0;
       font-size: 1.5rem;
       user-select: none;
       color: var(--button-bg);
     }
-
     #recentlyPlayed {
       max-height: 140px;
       overflow-y: auto;
@@ -135,7 +194,6 @@
       gap: 8px;
       margin-bottom: 20px;
     }
-
     #recentlyPlayed button {
       width: 100%;
       text-align: left;
@@ -153,11 +211,9 @@
     #recentlyPlayed button:hover {
       background: var(--button-hover);
     }
-
     #suggestForm {
       text-align: center;
     }
-
     #suggestForm input[type="text"] {
       width: 100%;
       box-sizing: border-box;
@@ -169,7 +225,6 @@
       color: var(--text);
       user-select: text;
     }
-
     #suggestForm button[type="submit"] {
       margin-top: 10px;
       width: 100%;
@@ -183,185 +238,281 @@
       user-select: none;
       transition: background 0.3s;
     }
-
     #suggestForm button[type="submit"]:hover {
       background: var(--button-hover);
     }
-
-    #suggestInstructions {
-      font-size: 12px;
-      margin-top: 6px;
-      opacity: 0.7;
+    #adminPanel {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 11000;
+      padding: 30px;
+      box-sizing: border-box;
+    }
+    #adminPanelContent {
+      background: var(--bg);
+      border: 2px solid var(--button-bg);
+      border-radius: 12px;
+      padding: 20px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 20px var(--button-bg);
+      text-align: center;
+      user-select: text;
+    }
+    #adminPanelContent h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: var(--button-bg);
+    }
+    #adminCloseBtn {
+      background: var(--button-bg);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
       user-select: none;
+      transition: background 0.3s;
+    }
+    #adminCloseBtn:hover {
+      background: var(--button-hover);
     }
   </style>
 </head>
 <body>
-  <header>Game Launcher</header>
-
-  <div class="controls">
-    <input id="searchInput" type="search" placeholder="Search games..." aria-label="Search games" />
-    <button class="toggle-mode" onclick="toggleDarkMode()" aria-label="Toggle light or dark mode">Toggle Light/Dark</button>
+  <div id="leftSidebar">
+    <button id="randomGameBtn">Random Game</button>
+    <div class="poll-container">
+      <iframe src="https://strawpoll.com/embed/NMnQNdJADg6" loading="lazy"></iframe>
+    </div>
+    <div id="hoverInfoContainer"><strong>Hover a game to see details</strong></div>
   </div>
 
-  <div id="tabs" class="controls" role="tablist" aria-label="Game categories">
-    <button role="tab" onclick="filterCategory('all')">All</button>
-    <button role="tab" onclick="filterCategory('arcade')">Arcade</button>
-    <button role="tab" onclick="filterCategory('sports')">Sports</button>
-    <button role="tab" onclick="filterCategory('puzzle')">Puzzle</button>
+  <div id="mainContent">
+    <header>Game Launcher</header>
+
+    <div class="controls">
+      <input id="searchInput" type="search" placeholder="Search games..." />
+      <button class="toggle-mode" onclick="toggleDarkMode()">Toggle Light/Dark</button>
+    </div>
+
+    <div id="tabs" class="controls">
+      <button class="selected" onclick="filterCategory('all', this)">All</button>
+      <button onclick="filterCategory('arcade', this)">Arcade</button>
+      <button onclick="filterCategory('sports', this)">Sports</button>
+      <button onclick="filterCategory('puzzle', this)">Puzzle</button>
+    </div>
+
+    <div id="buttonsContainer"></div>
+
+    <div id="sidebar">
+      <h2>Recently Played</h2>
+      <div id="recentlyPlayed">No recently played games.</div>
+      <form id="suggestForm">
+        <h2>Suggest a Game</h2>
+        <input type="text" id="suggestInput" placeholder="Game name or link" required />
+        <button type="submit">Submit Suggestion</button>
+        <p id="suggestInstructions">Want to play a game we don't have? Suggest it here!</p>
+      </form>
+    </div>
   </div>
 
-  <div id="buttonsContainer" aria-live="polite" aria-label="Available games"></div>
-
-  <!-- Sidebar with Recently Played and Suggest a Game -->
-  <div id="sidebar" aria-label="Sidebar with recently played games and game suggestion form">
-    <h2>Recently Played</h2>
-    <div id="recentlyPlayed" aria-live="polite">No recently played games.</div>
-
-    <form id="suggestForm" aria-label="Suggest a Game Form">
-      <h2>Suggest a Game</h2>
-      <input
-        type="text"
-        id="suggestInput"
-        placeholder="Game name or link"
-        required
-        aria-required="true"
-        aria-describedby="suggestInstructions"
-        autocomplete="off"
-      />
-      <button type="submit">Submit Suggestion</button>
-      <p id="suggestInstructions">
-        Got a cool game in mind? Let us know! We'll open your email client with your suggestion ready.
-      </p>
-    </form>
+  <div id="adminPanel" role="dialog" aria-modal="true" aria-labelledby="adminPanelTitle">
+    <div id="adminPanelContent">
+      <h2 id="adminPanelTitle">Admin Control Panel</h2>
+      <p>Welcome, admin! You can add your controls here.</p>
+      <button id="adminCloseBtn" aria-label="Close Admin Panel">Close Panel</button>
+    </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supabase = supabase.createClient(
+      'https://xazsviyywgyjggzooltl.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhenN2aXl5d2d5amdnem9vbHRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxNDc1MTMsImV4cCI6MjA2NDcyMzUxM30.gfbTnteZHGyo0d0ia-8iC2c9UP6GAyaS66fAX8rHx9c'
+    );
+  </script>
 
   <script>
     const games = [
-      { name: "2048", url: "2048.html", category: "puzzle" },
-      { name: "Cookie Clicker", url: "cookieclicker.html", category: "arcade" },
-      { name: "Drive Mad", url: "drivemad.html", category: "sports" },
-      { name: "Gunspin", url: "gunspin.html", category: "arcade" },
-      { name: "Monkey Mart", url: "monkeymart.html", category: "arcade" },
-      { name: "Moto X3M", url: "motox3m.html", category: "sports" },
-      { name: "Poly Track", url: "polytrack.html", category: "sports" },
-      { name: "Retro Bowl", url: "retrobowl.html", category: "sports" },
-      { name: "Rocket League", url: "rocketleague.html", category: "sports" },
-      { name: "Snow Rider", url: "snowrider.html", category: "sports" },
+      { name: "2048", url: "2048.html", category: "puzzle", description: "Combine matching numbers to reach 2048!" },
+      { name: "Cookie Clicker", url: "cookieclicker.html", category: "arcade", description: "Click and upgrade to bake infinite cookies." },
+      { name: "Drive Mad", url: "drivemad.html", category: "sports", description: "Drive through chaotic courses in this physics-based racer." },
+      { name: "GunSpin", url: "gunspin.html", category: "arcade", description: "Blast your gun to fly through the air as far as possible." },
+      { name: "Monkey Mart", url: "monkeymart.html", category: "arcade", description: "Run your own supermarket as a banana-loving monkey!" },
+      { name: "Moto X3M", url: "motox3m.html", category: "sports", description: "Perform crazy stunts in this fast-paced motorcycle game." },
+      { name: "Poly Track", url: "polytrack.html", category: "puzzle", description: "Race and solve track-building challenges with geometric precision." },
+      { name: "Retro Bowl", url: "retrobowl.html", category: "sports", description: "Lead your football team to victory in this retro-style game." },
+      { name: "Rocket League", url: "rocketleague.html", category: "sports", description: "Play soccer with rocket-powered cars in this high-energy game." },
+      { name: "Snow Rider 3D", url: "snowrider.html", category: "arcade", description: "Slide down snowy hills while dodging obstacles and collecting gifts." }
     ];
 
-    let currentCategory = "all";
-    const buttonsContainer = document.getElementById("buttonsContainer");
     const searchInput = document.getElementById("searchInput");
+    const buttonsContainer = document.getElementById("buttonsContainer");
+    const hoverInfo = document.getElementById("hoverInfoContainer");
     const recentlyPlayedContainer = document.getElementById("recentlyPlayed");
 
-    // Store recently played games (max 5)
+    let currentCategory = "all";
     let recentlyPlayed = [];
 
-    // Render main game buttons filtered by category and search
+    document.getElementById("randomGameBtn").onclick = () => {
+      const game = games[Math.floor(Math.random() * games.length)];
+      launchGame(game.url, game.name);
+    };
+
     function renderButtons() {
       const filter = searchInput.value.toLowerCase();
       buttonsContainer.innerHTML = "";
-      const filteredGames = games.filter(game => {
-        return (currentCategory === "all" || game.category === currentCategory) &&
-               game.name.toLowerCase().includes(filter);
-      });
+      const filteredGames = games.filter(game =>
+        (currentCategory === "all" || game.category === currentCategory) &&
+        game.name.toLowerCase().includes(filter)
+      );
 
-      filteredGames.forEach(game => {
+      if (filteredGames.length === 0) {
+        buttonsContainer.textContent = "No games found.";
+        return;
+      }
+
+      for (const game of filteredGames) {
         const btn = document.createElement("button");
         btn.className = "game-button";
         btn.textContent = game.name;
         btn.onclick = () => launchGame(game.url, game.name);
-        btn.setAttribute("aria-label", `Launch ${game.name} game`);
+        btn.onmouseenter = () => {
+          hoverInfo.innerHTML = `<strong>${game.name}</strong><br>${game.description}`;
+          btn.style.outline = "3px solid white";
+          btn.style.transform = "scale(1.05)";
+          btn.style.zIndex = "10";
+        };
+        btn.onmouseleave = () => {
+          hoverInfo.innerHTML = "<strong>Hover a game to see details</strong>";
+          btn.style.outline = "none";
+          btn.style.transform = "scale(1)";
+          btn.style.zIndex = "1";
+        };
         buttonsContainer.appendChild(btn);
-      });
-
-      if (filteredGames.length === 0) {
-        buttonsContainer.textContent = "No games found.";
       }
     }
 
-    // Filter category
-    function filterCategory(cat) {
+    function filterCategory(cat, btnEl) {
       currentCategory = cat;
+      document.querySelectorAll("#tabs button").forEach(b => {
+        b.classList.remove("selected");
+        b.setAttribute("aria-selected", false);
+      });
+      btnEl.classList.add("selected");
+      btnEl.setAttribute("aria-selected", true);
       renderButtons();
     }
 
-    // Launch game in new window with iframe
     function launchGame(url, name) {
       addRecentlyPlayed(name, url);
-
       const gameWindow = window.open("about:blank", "_blank");
-      const html = `
-        <html>
-          <head>
-            <title>${name}</title>
-            <style>
-              body { margin: 0; background: black; }
-              iframe { width: 100vw; height: 100vh; border: none; }
-            </style>
-          </head>
-          <body>
-            <iframe src="${url}" allowfullscreen></iframe>
-          </body>
-        </html>`;
-      gameWindow.document.open();
-      gameWindow.document.write(html);
+      gameWindow.document.write(`<!DOCTYPE html><html><head><title>${name}</title><style>body{margin:0;background:black;}iframe{width:100vw;height:100vh;border:none;}</style></head><body><iframe src="${url}" allowfullscreen></iframe></body></html>`);
       gameWindow.document.close();
     }
 
-    // Toggle light/dark mode
     function toggleDarkMode() {
       document.body.classList.toggle("light");
     }
 
-    // Add game to recently played list and update sidebar
     function addRecentlyPlayed(name, url) {
-      // Remove if already in list
       recentlyPlayed = recentlyPlayed.filter(g => g.name !== name);
-
-      // Add to front
       recentlyPlayed.unshift({ name, url });
-
-      // Keep max 5
-      if (recentlyPlayed.length > 5) {
-        recentlyPlayed.pop();
-      }
-
+      if (recentlyPlayed.length > 5) recentlyPlayed.pop();
       renderRecentlyPlayed();
     }
 
-    // Render recently played buttons
     function renderRecentlyPlayed() {
-      if (recentlyPlayed.length === 0) {
+      if (!recentlyPlayed.length) {
         recentlyPlayedContainer.textContent = "No recently played games.";
         return;
       }
       recentlyPlayedContainer.innerHTML = "";
-      recentlyPlayed.forEach(game => {
+      for (const g of recentlyPlayed) {
         const btn = document.createElement("button");
-        btn.textContent = game.name;
-        btn.title = `Launch ${game.name} again`;
-        btn.onclick = () => launchGame(game.url, game.name);
+        btn.textContent = g.name;
+        btn.onclick = () => launchGame(g.url, g.name);
         recentlyPlayedContainer.appendChild(btn);
-      });
+      }
     }
 
-    // Suggest form submission opens mailto in same tab
-    document.getElementById("suggestForm").addEventListener("submit", function (e) {
+    document.getElementById("suggestForm").addEventListener("submit", e => {
       e.preventDefault();
-      const value = document.getElementById("suggestInput").value.trim();
-      if (value) {
-        window.location.href = `mailto:Lamcclements10@gmail.com?subject=Game Suggestion&body=${encodeURIComponent(value)}`;
+      const val = document.getElementById("suggestInput").value.trim();
+
+      if (!val) return;
+
+      supabase
+        .from("suggestions")
+        .insert([{ suggestion: val }])
+        .then(({ error }) => {
+          if (error) {
+            console.error("Supabase error:", error);
+            document.getElementById("suggestInstructions").textContent = "Failed to submit suggestion.";
+          } else {
+            document.getElementById("suggestInstructions").textContent = "Thank you for your suggestion!";
+            document.getElementById("suggestInput").value = "";
+          }
+        });
+    });
+
+    searchInput.addEventListener("input", renderButtons);
+
+    renderButtons();
+    renderRecentlyPlayed();
+
+    const adminPanel = document.getElementById("adminPanel");
+    const adminCloseBtn = document.getElementById("adminCloseBtn");
+    const ADMIN_PASSWORD = "AudreyLane";
+
+    const pressedKeys = new Set();
+
+    window.addEventListener("keydown", (e) => {
+      pressedKeys.add(e.key.toLowerCase());
+
+      if (
+        pressedKeys.has("l") &&
+        pressedKeys.has("e") &&
+        pressedKeys.has("v") &&
+        pressedKeys.has("y")
+      ) {
+        pressedKeys.clear();
+        promptAdminPassword();
       }
     });
 
-    // Event listener for search input
-    searchInput.addEventListener("input", renderButtons);
+    window.addEventListener("keyup", (e) => {
+      pressedKeys.delete(e.key.toLowerCase());
+    });
 
-    // Initial render
-    renderButtons();
-    renderRecentlyPlayed();
+    function promptAdminPassword() {
+      const pwd = prompt("Enter admin password:");
+
+      if (pwd === ADMIN_PASSWORD) {
+        openAdminPanel();
+      } else if (pwd !== null) {
+        alert("Incorrect password.");
+      }
+    }
+
+    function openAdminPanel() {
+      adminPanel.style.display = "flex";
+      adminCloseBtn.focus();
+    }
+
+    adminCloseBtn.onclick = () => {
+      adminPanel.style.display = "none";
+    };
+
   </script>
 </body>
 </html>
