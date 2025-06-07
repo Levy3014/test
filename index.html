@@ -243,32 +243,46 @@
     }
     #adminPanel {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
-      color: white;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      border-left: 3px solid var(--button-bg);
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
       z-index: 11000;
-      padding: 30px;
+      padding: 20px;
       box-sizing: border-box;
+      transition: right 0.3s ease-in-out;
+      overflow-y: auto;
+    }
+    #adminPanel.open {
+      right: 0;
+    }
+
+    #mainContent, #gameButtons, #categories {
+      margin-right: auto;
+      margin-left: auto;
     }
     #adminPanelContent {
-      background: var(--bg);
-      border: 2px solid var(--button-bg);
-      border-radius: 12px;
-      padding: 20px;
-      width: 90%;
-      max-width: 600px;
-      box-shadow: 0 0 20px var(--button-bg);
-      text-align: center;
-      user-select: text;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
     #adminPanelContent h2 {
       margin-top: 0;
       margin-bottom: 15px;
       color: var(--button-bg);
+      border-bottom: 2px solid var(--button-bg);
+      padding-bottom: 10px;
+    }
+    .admin-section {
+      margin-bottom: 20px;
+    }
+    .admin-section h3 {
+      color: var(--button-bg);
+      margin-bottom: 10px;
     }
     #adminCloseBtn {
       background: var(--button-bg);
@@ -281,10 +295,199 @@
       margin-top: 20px;
       user-select: none;
       transition: background 0.3s;
+      align-self: flex-end;
     }
     #adminCloseBtn:hover {
       background: var(--button-hover);
     }
+    .admin-button {
+      background: var(--input-bg);
+      border: 1px solid var(--button-bg);
+      color: var(--text);
+      padding: 8px 12px;
+      margin: 5px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: background 0.2s;
+    }
+    .admin-button:hover {
+      background: var(--button-bg);
+      color: white;
+    }
+    
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 12000;
+    }
+    .modal-content {
+      background: var(--bg);
+      border: 2px solid var(--button-bg);
+      border-radius: 10px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+    .modal-content h2 {
+      color: var(--button-bg);
+      margin-top: 0;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin: 15px 0;
+      border: 1px solid var(--button-bg);
+      border-radius: 5px;
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .modal-content input.error {
+      border-color: #ff5555;
+      box-shadow: 0 0 5px #ff5555;
+    }
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .modal-buttons button {
+      background: var(--button-bg);
+      border: none;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .modal-buttons button:hover {
+      background: var(--button-hover);
+    }
+    #cancelPasswordBtn {
+      background: #777;
+    }
+    #cancelPasswordBtn:hover {
+      background: #999;
+    }
+    
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: var(--text);
+    }
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--button-bg);
+      border-radius: 5px;
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .form-group textarea {
+      resize: vertical;
+    }
+    
+
+    #suggestionsList {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    .suggestion-item {
+      padding: 10px;
+      border-bottom: 1px solid var(--button-bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+    .suggestion-text {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+    .suggestion-actions {
+      display: flex;
+      gap: 5px;
+    }
+    .suggestion-actions button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .add-btn {
+      background: #4CAF50;
+      color: white;
+    }
+    .delete-btn {
+      background: #f44336;
+      color: white;
+    }
+    
+    #removeGameList {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    
+    .game-item {
+      padding: 10px;
+      border-bottom: 1px solid var(--button-bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .game-item:last-child {
+      border-bottom: none;
+    }
+    
+    .game-info {
+      flex-grow: 1;
+    }
+    
+    .game-name {
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+    
+    .game-details {
+      font-size: 12px;
+      color: var(--text);
+      opacity: 0.8;
+    }
+    
   </style>
 </head>
 <body>
@@ -295,6 +498,50 @@
     </div>
     <div id="hoverInfoContainer"><strong>Hover a game to see details</strong></div>
   </div>
+  
+  <div id="addGameDialog" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Add New Game</h2>
+      <form id="addGameForm">
+        <div class="form-group">
+          <label for="gameName">Game Name:</label>
+          <input type="text" id="gameName" required />
+        </div>
+        <div class="form-group">
+          <label for="gameUrl">Game URL:</label>
+          <input type="text" id="gameUrl" required placeholder="example.html" />
+        </div>
+        <div class="form-group">
+          <label for="gameCategory">Category:</label>
+          <select id="gameCategory" required>
+            <option value="arcade">Arcade</option>
+            <option value="sports">Sports</option>
+            <option value="puzzle">Puzzle</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="gameDescription">Description:</label>
+          <textarea id="gameDescription" required rows="3"></textarea>
+        </div>
+        <div class="modal-buttons">
+          <button type="submit">Add Game</button>
+          <button type="button" id="cancelAddGameBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div id="suggestionsDialog" class="modal-overlay">
+    <div class="modal-content">
+      <h2>User Suggestions</h2>
+      <div id="suggestionsList">
+        <p>Loading suggestions...</p>
+      </div>
+      <div class="modal-buttons">
+        <button id="closeSuggestionsBtn">Close</button>
+      </div>
+    </div>
+  </div>
 
   <div id="mainContent">
     <header>Game Launcher</header>
@@ -302,6 +549,7 @@
     <div class="controls">
       <input id="searchInput" type="search" placeholder="Search games..." />
       <button class="toggle-mode" onclick="toggleDarkMode()">Toggle Light/Dark</button>
+      <span id="adminIndicator" style="display: none; color: var(--button-bg); font-weight: bold; margin-left: 10px;">⚙️ Admin Mode</span>
     </div>
 
     <div id="tabs" class="controls">
@@ -325,24 +573,112 @@
     </div>
   </div>
 
+  <div id="passwordDialog" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Admin Access</h2>
+      <p>Please enter the admin password:</p>
+      <input type="password" id="passwordInput" />
+      <div class="modal-buttons">
+        <button id="submitPasswordBtn">Submit</button>
+        <button id="cancelPasswordBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="addGameDialog" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Add New Game</h2>
+      <form id="addGameForm">
+        <div class="form-group">
+          <label for="gameName">Game Name:</label>
+          <input type="text" id="gameName" required />
+        </div>
+        <div class="form-group">
+          <label for="gameUrl">Game URL:</label>
+          <input type="text" id="gameUrl" required placeholder="example.html" />
+        </div>
+        <div class="form-group">
+          <label for="gameCategory">Category:</label>
+          <select id="gameCategory" required>
+            <option value="arcade">Arcade</option>
+            <option value="sports">Sports</option>
+            <option value="puzzle">Puzzle</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="gameDescription">Description:</label>
+          <textarea id="gameDescription" required rows="3"></textarea>
+        </div>
+        <div class="modal-buttons">
+          <button type="submit">Add Game</button>
+          <button type="button" id="cancelAddGameBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div id="suggestionsDialog" class="modal-overlay">
+    <div class="modal-content">
+      <h2>User Suggestions</h2>
+      <div id="suggestionsList">
+        <p>Loading suggestions...</p>
+      </div>
+      <div class="modal-buttons">
+        <button id="closeSuggestionsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
   <div id="adminPanel" role="dialog" aria-modal="true" aria-labelledby="adminPanelTitle">
     <div id="adminPanelContent">
       <h2 id="adminPanelTitle">Admin Control Panel</h2>
-      <p>Welcome, admin! You can add your controls here.</p>
+      
+      <div class="admin-section">
+        <h3>Game Management</h3>
+        <button class="admin-button" id="addGameBtn">Add New Game</button>
+        <button class="admin-button" id="editGamesBtn">Edit Existing Games</button>
+        <button class="admin-button" id="removeGameBtn">Remove Game</button>
+      </div>
+      
+      <div class="admin-section">
+        <h3>User Suggestions</h3>
+        <button class="admin-button" id="viewSuggestionsBtn">View Suggestions</button>
+        <button class="admin-button" id="clearSuggestionsBtn">Clear Suggestions</button>
+      </div>
+      
+      <div class="admin-section">
+        <h3>System</h3>
+        <button class="admin-button" id="exportDataBtn">Export Game Data</button>
+        <button class="admin-button" id="importDataBtn">Import Game Data</button>
+      </div>
+      
       <button id="adminCloseBtn" aria-label="Close Admin Panel">Close Panel</button>
+    </div>
+  </div>
+  
+  <div id="removeGameDialog" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Remove Game</h2>
+      <div id="removeGameList">
+        <p>Loading games...</p>
+      </div>
+      <div class="modal-buttons">
+        <button id="closeRemoveGameBtn">Close</button>
+      </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
-    const supabase = supabase.createClient(
-      'https://xazsviyywgyjggzooltl.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhenN2aXl5d2d5amdnem9vbHRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxNDc1MTMsImV4cCI6MjA2NDcyMzUxM30.gfbTnteZHGyo0d0ia-8iC2c9UP6GAyaS66fAX8rHx9c'
-    );
+    const SUPABASE_URL = 'https://xazsviyywgyjggzooltl.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhenN2aXl5d2d5amdnem9vbHRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxNDc1MTMsImV4cCI6MjA2NDcyMzUxM30.gfbTnteZHGyo0d0ia-8iC2c9UP6GAyaS66fAX8rHx9c';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   </script>
 
   <script>
-    const games = [
+    let games = [];
+    
+    const defaultGames = [
       { name: "2048", url: "2048.html", category: "puzzle", description: "Combine matching numbers to reach 2048!" },
       { name: "Cookie Clicker", url: "cookieclicker.html", category: "arcade", description: "Click and upgrade to bake infinite cookies." },
       { name: "Drive Mad", url: "drivemad.html", category: "sports", description: "Drive through chaotic courses in this physics-based racer." },
@@ -354,6 +690,47 @@
       { name: "Rocket League", url: "rocketleague.html", category: "sports", description: "Play soccer with rocket-powered cars in this high-energy game." },
       { name: "Snow Rider 3D", url: "snowrider.html", category: "arcade", description: "Slide down snowy hills while dodging obstacles and collecting gifts." }
     ];
+    
+    async function loadGamesFromDatabase() {
+      try {
+        const { data, error } = await supabase
+          .from("games")
+          .select("*")
+          .order("name");
+        
+        if (error) {
+          console.error("Error loading games from database:", error);
+          games = [...defaultGames];
+        } else if (data && data.length > 0) {
+          games = data;
+          console.log("Loaded games from database:", games.length);
+        } else {
+          games = [...defaultGames];
+          console.log("No games in database, using defaults");
+          populateDatabaseWithDefaultGames();
+        }
+      } catch (error) {
+        console.error("Exception loading games:", error);
+        games = [...defaultGames];
+      }
+      
+      renderButtons();
+    }
+    async function populateDatabaseWithDefaultGames() {
+      try {
+        const { error } = await supabase
+          .from("games")
+          .insert(defaultGames);
+        
+        if (error) {
+          console.error("Error populating database with default games:", error);
+        } else {
+          console.log("Database populated with default games");
+        }
+      } catch (error) {
+        console.error("Exception populating database:", error);
+      }
+    }
 
     const searchInput = document.getElementById("searchInput");
     const buttonsContainer = document.getElementById("buttonsContainer");
@@ -464,55 +841,358 @@
           }
         });
     });
-
-    searchInput.addEventListener("input", renderButtons);
-
-    renderButtons();
-    renderRecentlyPlayed();
-
-    const adminPanel = document.getElementById("adminPanel");
-    const adminCloseBtn = document.getElementById("adminCloseBtn");
-    const ADMIN_PASSWORD = "AudreyLane";
-
-    const pressedKeys = new Set();
-
-    window.addEventListener("keydown", (e) => {
-      pressedKeys.add(e.key.toLowerCase());
-
-      if (
-        pressedKeys.has("l") &&
-        pressedKeys.has("e") &&
-        pressedKeys.has("v") &&
-        pressedKeys.has("y")
-      ) {
-        pressedKeys.clear();
-        promptAdminPassword();
-      }
-    });
-
-    window.addEventListener("keyup", (e) => {
-      pressedKeys.delete(e.key.toLowerCase());
-    });
-
-    function promptAdminPassword() {
-      const pwd = prompt("Enter admin password:");
-
-      if (pwd === ADMIN_PASSWORD) {
-        openAdminPanel();
-      } else if (pwd !== null) {
-        alert("Incorrect password.");
-      }
-    }
-
-    function openAdminPanel() {
-      adminPanel.style.display = "flex";
-      adminCloseBtn.focus();
-    }
-
+    
+    document.getElementById("exportDataBtn").onclick = async () => {
+      try {
+          const { data, error } = await supabase
+            .from("games")
+            .select("*");
+            
+          if (error) throw error;
+          
+          const gameData = JSON.stringify(data || games, null, 2);
+          const blob = new Blob([gameData], {type: "application/json"});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "game-data.json";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } catch (error) {
+          console.error("Error exporting data:", error);
+          alert("Error exporting data. Using local data instead.");
+          
+          const gameData = JSON.stringify(games, null, 2);
+          const blob = new Blob([gameData], {type: "application/json"});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "game-data.json";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      };
+      
+      document.getElementById("importDataBtn").onclick = () => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = ".json";
+        
+        fileInput.onchange = async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          
+          const reader = new FileReader();
+          reader.onload = async (event) => {
+            try {
+              const importedGames = JSON.parse(event.target.result);
+              
+              if (!Array.isArray(importedGames)) {
+                throw new Error("Invalid data format. Expected an array of games.");
+              }
+              
+              if (!confirm(`Are you sure you want to import ${importedGames.length} games? This will replace your current games.`)) {
+                return;
+              }
+              
+              const { error: deleteError } = await supabase
+                .from("games")
+                .delete()
+                .neq("id", 0);
+              
+              if (deleteError) throw deleteError;
+              
+              const { error: insertError } = await supabase
+                .from("games")
+                .insert(importedGames);
+              
+              if (insertError) throw insertError;
+              
+              await loadGamesFromDatabase();
+              
+              alert(`Successfully imported ${importedGames.length} games!`);
+              
+            } catch (error) {
+              console.error("Error importing data:", error);
+              alert(`Error importing data: ${error.message}`);
+            }
+          };
+          
+          reader.readAsText(file);
+        };
+        
+        fileInput.click();
+      };
+    
     adminCloseBtn.onclick = () => {
-      adminPanel.style.display = "none";
+      adminPanel.classList.remove("open");
+      document.getElementById("adminIndicator").style.display = "none";
     };
+    
+    const addGameDialog = document.getElementById("addGameDialog");
+    const addGameForm = document.getElementById("addGameForm");
+    const cancelAddGameBtn = document.getElementById("cancelAddGameBtn");
+    
+    function showAddGameDialog() {
+      addGameDialog.style.display = "flex";
+      document.getElementById("gameName").focus();
+      addGameForm.reset();
+    }
+    
+    function closeAddGameDialog() {
+      addGameDialog.style.display = "none";
+    }
+    
+    addGameForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      
+      const newGame = {
+        name: document.getElementById("gameName").value.trim(),
+        url: document.getElementById("gameUrl").value.trim(),
+        category: document.getElementById("gameCategory").value,
+        description: document.getElementById("gameDescription").value.trim()
+      };
+      
+      try {
+        const { error } = await supabase
+          .from("games")
+          .insert([newGame]);
+        
+        if (error) {
+          throw error;
+        }
+        
+        games.push(newGame);
+        renderButtons();
+        closeAddGameDialog();
+        alert(`Game "${newGame.name}" has been added successfully!`);
+      } catch (error) {
+        console.error("Error adding game:", error);
+        alert("Error adding game. Please try again.");
+      }
+    });
+    
+    cancelAddGameBtn.onclick = closeAddGameDialog;
+    
+    addGameDialog.addEventListener("click", function(e) {
+      if (e.target === addGameDialog) {
+        closeAddGameDialog();
+      }
+    });
+    
+    const suggestionsDialog = document.getElementById("suggestionsDialog");
+    const suggestionsList = document.getElementById("suggestionsList");
+    const closeSuggestionsBtn = document.getElementById("closeSuggestionsBtn");
+    
+    function showSuggestionsDialog() {
+      suggestionsDialog.style.display = "flex";
+      loadSuggestions();
+    }
+    
+    function closeSuggestionsDialog() {
+      suggestionsDialog.style.display = "none";
+    }
+    
+    async function loadSuggestions() {
+      suggestionsList.innerHTML = "<p>Loading suggestions...</p>";
+      
+      try {
+        const { data, error } = await supabase
+          .from("suggestions")
+          .select("*")
+          .order("created_at", { ascending: false });
+        
+        if (error) throw error;
+        
+        if (data.length === 0) {
+          suggestionsList.innerHTML = "<p>No suggestions found.</p>";
+          return;
+        }
+        
+        suggestionsList.innerHTML = "";
+        data.forEach(item => {
+          const suggestionItem = document.createElement("div");
+          suggestionItem.className = "suggestion-item";
+          suggestionItem.innerHTML = `
+            <div class="suggestion-text">${item.suggestion}</div>
+            <div class="suggestion-actions">
+              <button class="add-btn" data-suggestion="${item.suggestion}">Add as Game</button>
+              <button class="delete-btn" data-id="${item.id}">Delete</button>
+            </div>
+          `;
+          suggestionsList.appendChild(suggestionItem);
+        });
+        
+        suggestionsList.querySelectorAll(".add-btn").forEach(btn => {
+          btn.addEventListener("click", function() {
+            const suggestion = this.getAttribute("data-suggestion");
+            prepareGameFromSuggestion(suggestion);
+          });
+        });
+        
+        suggestionsList.querySelectorAll(".delete-btn").forEach(btn => {
+          btn.addEventListener("click", function() {
+            const id = this.getAttribute("data-id");
+            deleteSuggestion(id);
+          });
+        });
+        
+      } catch (error) {
+        console.error("Error loading suggestions:", error);
+        suggestionsList.innerHTML = "<p>Error loading suggestions. Please try again.</p>";
+      }
+    }
+    
+    function prepareGameFromSuggestion(suggestion) {
+      closeSuggestionsDialog();
+      showAddGameDialog();
+      document.getElementById("gameName").value = suggestion;
+      const urlSuggestion = suggestion.toLowerCase().replace(/[^a-z0-9]/g, "") + ".html";
+      document.getElementById("gameUrl").value = urlSuggestion;
+    }
+    
+    async function deleteSuggestion(id) {
+      if (!confirm("Are you sure you want to delete this suggestion?")) return;
+      
+      try {
+        const { error } = await supabase
+          .from("suggestions")
+          .delete()
+          .eq("id", id);
+        
+        if (error) throw error;
+        loadSuggestions();
+        
+      } catch (error) {
+        console.error("Error deleting suggestion:", error);
+        alert("Error deleting suggestion. Please try again.");
+      }
+    }
+    
+    async function clearAllSuggestions() {
+      try {
+        const { error } = await supabase
+          .from("suggestions")
+          .delete()
+          .neq("id", 0);
+        
+        if (error) throw error;
+        
+        alert("All suggestions have been cleared.");
+        
+        if (suggestionsDialog.style.display === "flex") {
+          loadSuggestions();
+        }
+        
+      } catch (error) {
+        console.error("Error clearing suggestions:", error);
+        alert("Error clearing suggestions. Please try again.");
+      }
+    }
+    
+    closeSuggestionsBtn.onclick = closeSuggestionsDialog;
+    
+    suggestionsDialog.addEventListener("click", function(e) {
+      if (e.target === suggestionsDialog) {
+        closeSuggestionsDialog();
+      }
+    });
+    
+    const removeGameDialog = document.getElementById("removeGameDialog");
+    const removeGameList = document.getElementById("removeGameList");
+    const closeRemoveGameBtn = document.getElementById("closeRemoveGameBtn");
+    
+    function showRemoveGameDialog() {
+      removeGameDialog.style.display = "flex";
+      loadGamesForRemoval();
+    }
+    
+    function closeRemoveGameDialog() {
+      removeGameDialog.style.display = "none";
+    }
+    
+    async function loadGamesForRemoval() {
+      removeGameList.innerHTML = "<p>Loading games...</p>";
+      
+      try {
+        const { data, error } = await supabase
+          .from("games")
+          .select("*")
+          .order("name");
+        
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+          removeGameList.innerHTML = "<p>No games found.</p>";
+          return;
+        }
+        
+        removeGameList.innerHTML = "";
+        data.forEach(game => {
+          const gameItem = document.createElement("div");
+          gameItem.className = "game-item";
+          gameItem.innerHTML = `
+            <div class="game-info">
+              <div class="game-name">${game.name}</div>
+              <div class="game-details">
+                Category: ${game.category} | URL: ${game.url}
+              </div>
+            </div>
+            <button class="delete-btn" data-id="${game.id}" data-name="${game.name}">Delete</button>
+          `;
+          removeGameList.appendChild(gameItem);
+        });
+        
+        removeGameList.querySelectorAll(".delete-btn").forEach(btn => {
+          btn.addEventListener("click", function() {
+            const id = this.getAttribute("data-id");
+            const name = this.getAttribute("data-name");
+            removeGame(id, name);
+          });
+        });
+        
+      } catch (error) {
+        console.error("Error loading games for removal:", error);
+        removeGameList.innerHTML = "<p>Error loading games. Please try again.</p>";
+      }
+    }
+    
+    async function removeGame(id, name) {
+      if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+      
+      try {
+        const { error } = await supabase
+          .from("games")
+          .delete()
+          .eq("id", id);
+        
+        if (error) throw error;
+        
+        games = games.filter(game => game.id !== id);
+        renderButtons();
+        loadGamesForRemoval();
+        
+        alert(`Game "${name}" has been removed successfully!`);
+        
+      } catch (error) {
+        console.error("Error removing game:", error);
+        alert("Error removing game. Please try again.");
+      }
+    }
+    
+    closeRemoveGameBtn.onclick = closeRemoveGameDialog;
+    
+    removeGameDialog.addEventListener("click", function(e) {
+      if (e.target === removeGameDialog) {
+        closeRemoveGameDialog();
+      }
+    });
+    
+    loadGamesFromDatabase();
 
   </script>
 </body>
 </html>
+
