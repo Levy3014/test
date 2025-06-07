@@ -668,6 +668,16 @@
     </div>
   </div>
 
+  <script>
+  let warnOnLeave = true; // You can toggle this dynamically later
+  window.addEventListener("beforeunload", function (e) {
+    if (warnOnLeave) {
+      e.preventDefault();
+      e.returnValue = "";
+    }
+  });
+</script>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
     const SUPABASE_URL = 'https://xazsviyywgyjggzooltl.supabase.co';
@@ -1191,6 +1201,63 @@
     });
     
     loadGamesFromDatabase();
+
+    // Admin panel access via keyboard shortcut (Ctrl+Alt+K)
+    document.addEventListener("keydown", function(e) {
+      if (e.ctrlKey && e.altKey && e.key === "k") {
+        showPasswordDialog();
+      }
+    });
+
+    const passwordDialog = document.getElementById("passwordDialog");
+    const passwordInput = document.getElementById("passwordInput");
+    const submitPasswordBtn = document.getElementById("submitPasswordBtn");
+    const cancelPasswordBtn = document.getElementById("cancelPasswordBtn");
+    const adminPanel = document.getElementById("adminPanel");
+
+    function showPasswordDialog() {
+      passwordDialog.style.display = "flex";
+      passwordInput.value = "";
+      passwordInput.focus();
+    }
+
+    function closePasswordDialog() {
+      passwordDialog.style.display = "none";
+    }
+
+    submitPasswordBtn.onclick = function() {
+      const password = passwordInput.value.trim();
+      if (password === "admin123") { // You can change this password
+        closePasswordDialog();
+        adminPanel.classList.add("open");
+        document.getElementById("adminIndicator").style.display = "inline";
+      } else {
+        passwordInput.classList.add("error");
+        setTimeout(() => passwordInput.classList.remove("error"), 500);
+      }
+    };
+
+    cancelPasswordBtn.onclick = closePasswordDialog;
+
+    passwordDialog.addEventListener("click", function(e) {
+      if (e.target === passwordDialog) {
+        closePasswordDialog();
+      }
+    });
+
+    // Allow Enter key to submit password
+    passwordInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        submitPasswordBtn.click();
+      }
+    });
+
+    // Connect admin panel buttons
+    document.getElementById("addGameBtn").onclick = showAddGameDialog;
+    document.getElementById("removeGameBtn").onclick = showRemoveGameDialog;
+    document.getElementById("viewSuggestionsBtn").onclick = showSuggestionsDialog;
+    document.getElementById("clearSuggestionsBtn").onclick = clearAllSuggestions;
 
   </script>
 </body>
